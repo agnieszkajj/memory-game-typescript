@@ -30,14 +30,14 @@ function App(): JSX.Element {
         setCards(newCards);
         resetTurn();
       } else {
-        resetTurn();
+        setTimeout(() => {
+          resetTurn();
+        }, 2000);
       }
     } else {
       return;
     }
   }, [choiceOne, choiceTwo]);
-
-  console.log(cards);
 
   //shuffle Cards
   const shuffleCards = () => {
