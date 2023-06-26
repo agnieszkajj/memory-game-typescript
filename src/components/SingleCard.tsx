@@ -1,16 +1,25 @@
 import "./SingleCard.css";
+import { Card } from "../interfaces";
 
 interface SingleCardProps {
-  id: number;
-  src: string;
+  card: Card;
+  handleChoice: (card: Card) => void;
+  flipped: boolean;
 }
 
-const SingleCard = ({ id, src }: SingleCardProps) => {
+const SingleCard = ({ card, handleChoice, flipped }: SingleCardProps) => {
   return (
-    <div className="card" key={id}>
-      <div>
-        <img src={src} alt={src} className="front" />
-        <img src="./img/cover.png" alt="card back" className="back" />
+    <div className="card" key={card.id}>
+      <div className={flipped ? "flipped" : ""}>
+        <img src={card.src} alt={card.src} className="front" />
+        <img
+          src="./img/cover.png"
+          alt="card back"
+          className="back"
+          onClick={() => {
+            handleChoice(card);
+          }}
+        />
       </div>
     </div>
   );

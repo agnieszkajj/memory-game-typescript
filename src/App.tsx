@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
-import { ShuffledCards } from "./interfaces";
+import { Card } from "./interfaces";
 import SingleCard from "./components/SingleCard";
 
 const cardImages = [
@@ -12,9 +12,32 @@ const cardImages = [
   { src: "/img/sword-1.png", matched: false },
 ];
 
-function App() {
-  const [cards, setCards] = useState<ShuffledCards[]>([]);
+function App(): JSX.Element {
+  const [cards, setCards] = useState<Card[]>([]);
   const [turns, setTurns] = useState<number>(0);
+  const [choiceOne, setChoiceOne] = useState<Card | null>(null);
+  const [choiceTwo, setChoiceTwo] = useState<Card | null>(null);
+
+  useEffect(() => {
+    if (choiceOne && choiceTwo) {
+      if (choiceOne?.src === choiceTwo?.src) {
+        const newCards = cards.map((card) => {
+          if (card.src === choiceOne.src || card.src === choiceTwo.src) {
+            return { ...card, matched: true };
+          }
+          return card;
+        });
+        setCards(newCards);
+        resetTurn();
+      } else {
+        resetTurn();
+      }
+    } else {
+      return;
+    }
+  }, [choiceOne, choiceTwo]);
+
+  console.log(cards);
 
   //shuffle Cards
   const shuffleCards = () => {
@@ -25,13 +48,32 @@ function App() {
     setTurns(0);
   };
 
+  //handle a choice
+  const handleChoice = (card: Card) => {
+    choiceOne ? setChoiceTwo(card) : setChoiceOne(card);
+  };
+
+  //reset choices and increse turn
+  const resetTurn = () => {
+    setChoiceOne(null);
+    setChoiceTwo(null);
+    setTurns((prevTurns) => prevTurns + 1);
+  };
+
   return (
     <>
       <h1>Magic Match</h1>
       <button onClick={shuffleCards}>New game</button>
       <div className="card-grid">
         {cards.map((card) => {
-          return <SingleCard {...card}></SingleCard>;
+          return (
+            <SingleCard
+              key={card.id}
+              card={card}
+              handleChoice={handleChoice}
+              flipped={card === choiceOne || card === choiceTwo || card.matched}
+            ></SingleCard>
+          );
         })}
       </div>
     </>
