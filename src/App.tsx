@@ -17,9 +17,11 @@ function App(): JSX.Element {
   const [turns, setTurns] = useState<number>(0);
   const [choiceOne, setChoiceOne] = useState<Card | null>(null);
   const [choiceTwo, setChoiceTwo] = useState<Card | null>(null);
+  const [disabled, setDisabled] = useState<boolean>(false);
 
   useEffect(() => {
     if (choiceOne && choiceTwo) {
+      setDisabled(true);
       if (choiceOne?.src === choiceTwo?.src) {
         const newCards = cards.map((card) => {
           if (card.src === choiceOne.src || card.src === choiceTwo.src) {
@@ -44,9 +46,16 @@ function App(): JSX.Element {
     const shuffledCards = [...cardImages, ...cardImages]
       .sort(() => Math.random() - 0.5)
       .map((card) => ({ ...card, id: Math.random() }));
+    setChoiceOne(null);
+    setChoiceTwo(null);
     setCards(shuffledCards);
     setTurns(0);
   };
+
+  //start a game automatically
+  useEffect(() => {
+    shuffleCards();
+  }, []);
 
   //handle a choice
   const handleChoice = (card: Card) => {
@@ -58,6 +67,7 @@ function App(): JSX.Element {
     setChoiceOne(null);
     setChoiceTwo(null);
     setTurns((prevTurns) => prevTurns + 1);
+    setDisabled(false);
   };
 
   return (
@@ -72,10 +82,12 @@ function App(): JSX.Element {
               card={card}
               handleChoice={handleChoice}
               flipped={card === choiceOne || card === choiceTwo || card.matched}
+              disabled={disabled}
             ></SingleCard>
           );
         })}
       </div>
+      <p>{turns} turns</p>
     </>
   );
 }

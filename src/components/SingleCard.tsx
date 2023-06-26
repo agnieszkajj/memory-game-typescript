@@ -5,9 +5,15 @@ interface SingleCardProps {
   card: Card;
   handleChoice: (card: Card) => void;
   flipped: boolean;
+  disabled: boolean;
 }
 
-const SingleCard = ({ card, handleChoice, flipped }: SingleCardProps) => {
+const SingleCard = ({
+  card,
+  handleChoice,
+  flipped,
+  disabled,
+}: SingleCardProps) => {
   return (
     <div className="card" key={card.id}>
       <div className={flipped ? "flipped" : ""}>
@@ -17,7 +23,9 @@ const SingleCard = ({ card, handleChoice, flipped }: SingleCardProps) => {
           alt="card back"
           className="back"
           onClick={() => {
-            handleChoice(card);
+            if (!disabled) {
+              handleChoice(card);
+            }
           }}
         />
       </div>
