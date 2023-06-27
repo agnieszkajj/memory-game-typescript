@@ -21,7 +21,7 @@ To get a local copy of the code, clone it using git:
 ```
 git clone 
 https://github.com/agnieszkajj/memory-game-typescript.git
-cd memory-game-react
+cd memory-game-typescript
 ```
 Install dependencies:
 ```
